@@ -23,7 +23,7 @@ and say whether it did.
 | Install | Status | What's been checked |
 |---|---|---|
 | [Docker](#docker) | Partly tested | The image builds and is published for amd64 and arm64. A container hasn't been run from it yet. The `PUID`/`PGID` handling was tested on Linux outside Docker |
-| [Unraid](#unraid) | Not tested yet | The template file is valid, and it uses the same image as Docker. (The author's own Unraid setup runs lite-tv a different way, with Node mounted from a folder.) |
+| [Unraid](#unraid) | Not tested yet | The template file is valid, and it uses the same image as Docker |
 | [Linux](#linux-without-docker) | Tested | Run on Ubuntu 24.04 (under WSL): sign-ins stored, `PUID`/`PGID` checked. The systemd unit passes `systemd-analyze verify`, but hasn't been run as a service |
 | [Windows](#windows) | Partly tested | On Windows 10, `start.cmd` was run the way Task Scheduler starts it, and served pages. The firewall and scheduled-task commands were checked but not registered |
 | [macOS](#macos) | Not tested | lite-tv only needs Node.js, as on Linux. The launch agent file is valid |
