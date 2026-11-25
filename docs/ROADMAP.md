@@ -20,8 +20,9 @@
 - Libraries switcher (multiple movie or show libraries), collections.
 
 ## Packaging
-- A multi-arch image (amd64 and arm64) on GHCR, built by a GitHub Action.
-- An Unraid Community Applications template.
+- Done: multi-arch image (amd64 and arm64) on GHCR, built by a GitHub Action (`.github/workflows/docker.yml`).
+- Done: Unraid template (`unraid/lite-tv.xml`) and install guides for Docker, Unraid, Linux, Windows and macOS.
+- Next: list the template in Unraid Community Applications.
 - Maybe: a Jellyfin server plugin that serves the UI at `/lite`, for setups without Docker.
 
 ## Design rules

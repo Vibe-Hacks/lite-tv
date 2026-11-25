@@ -6,6 +6,20 @@ const http = require('http'), fs = require('fs'), path = require('path'), crypto
 let config;
 try { config = require('./lib/config'); }
 catch (e) { console.error(`lite-tv: ${e.message}`); process.exit(1); }
+
+// ---------- Docker: PUID / PGID ----------
+// The image starts as root so it can take ownership of the data folder (Docker and Unraid create a missing
+// host folder as root), then runs as PUID:PGID for everything else. Started any other way, this is skipped.
+if (process.getuid && process.getuid() === 0 && config.puid != null) {
+  fs.mkdirSync(config.dataDir, { recursive: true });
+  for (const f of [config.dataDir, ...fs.readdirSync(config.dataDir).map(n => path.join(config.dataDir, n))]) {
+    try { fs.chownSync(f, config.puid, config.pgid); } catch { /* read-only mount: the store warns later */ }
+  }
+  process.setgroups([config.pgid]);
+  process.setgid(config.pgid);
+  process.setuid(config.puid);
+}
+
 const h = require('./lib/html');
 const { setCookie } = require('./lib/http');
 const { flushAll } = require('./lib/store');
@@ -77,7 +91,7 @@ const server = http.createServer(async (req, res) => {
     if (!res.headersSent) send(500, h.errorPage('Something went wrong', e.message, req.url));
   }
 }).listen(config.port, '0.0.0.0', () =>
-  console.log(`lite-tv on :${config.port} (${backends.map(b => `${b.label} → ${config[b.id].url.href}`).join(', ')})`));
+  console.log(`lite-tv on :${config.port} (${backends.map(b => `${b.label} -> ${config[b.id].url.href}`).join(', ')})`));
 
 // docker stop / Ctrl+C: save pending sign-ins, then exit (as PID 1 in a container, Node won't exit on its own).
 for (const sig of ['SIGTERM', 'SIGINT']) process.on(sig, () => { flushAll(); server.close(); process.exit(0); });

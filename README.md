@@ -8,6 +8,8 @@ lite-tv runs next to your Jellyfin server and **builds the pages on the server**
 plus about 11 KB of simple JavaScript for remote-control navigation and the video player. Nothing has to
 be installed on the TV: you open a URL in its browser (or install the optional launcher app).
 
+<p align="center"><img src="docs/screenshots/home.jpg" alt="lite-tv home screen: Continue watching, Next up and Latest movies" width="100%"></p>
+
 **Status:** early, but usable every day. Home (Continue watching, Next up, latest movies and shows), Movies,
 TV shows, playback with progress reporting, and "Up next" all work. See [docs/ROADMAP.md](docs/ROADMAP.md).
 
@@ -28,23 +30,47 @@ The engine checks cover the pages and remote-control navigation. Video playback 
 media player, so it has only been confirmed on the C7. The older the TV, the more lite-tv helps. On a 2022 or
 newer TV the official Jellyfin app is usually fine.
 
-## Quick start
+## Screenshots
+
+<table>
+  <tr>
+    <td width="50%"><img src="docs/screenshots/movies.jpg" alt="Movies grid"><br><sub><b>Movies</b>: sort, page and pick with the remote</sub></td>
+    <td width="50%"><img src="docs/screenshots/movie.jpg" alt="Movie page"><br><sub><b>Movie page</b>: resume, play, audio and subtitle choice</sub></td>
+  </tr>
+  <tr>
+    <td><img src="docs/screenshots/series.jpg" alt="Series page"><br><sub><b>Series</b>: next episode and seasons</sub></td>
+    <td><img src="docs/screenshots/season.jpg" alt="Season page"><br><sub><b>Season</b>: episodes with watched marks</sub></td>
+  </tr>
+  <tr>
+    <td><img src="docs/screenshots/login.jpg" alt="Sign in with Quick Connect"><br><sub><b>Sign in</b> with a Quick Connect code</sub></td>
+    <td></td>
+  </tr>
+</table>
+
+<sub>Screenshots use the built-in demo library (`tools/demo-jellyfin.js`): invented titles and generated artwork.</sub>
+
+## Install
+
+lite-tv runs on any always-on computer on your network, usually the one that runs Jellyfin.
+**[docs/INSTALL.md](docs/INSTALL.md)** has step-by-step instructions for
+[Docker](docs/INSTALL.md#docker), [Unraid](docs/INSTALL.md#unraid), [Linux](docs/INSTALL.md#linux-without-docker),
+[Windows](docs/INSTALL.md#windows) and [macOS](docs/INSTALL.md#macos).
+
+The quickest way, with Docker:
 
 ```sh
-docker build -t lite-tv .
-docker run -d --init --name lite-tv -p 6972:6972 -v lite-tv-data:/data -e JELLYFIN_URL=http://192.168.1.10:8096 lite-tv
+docker run -d --init --name lite-tv --restart unless-stopped -p 6972:6972   -e JELLYFIN_URL=http://192.168.1.10:8096 -v lite-tv-data:/data ghcr.io/vibe-hacks/lite-tv:latest
 ```
 
-Or with Docker Compose: edit `JELLYFIN_URL` in [docker-compose.yml](docker-compose.yml), then `docker compose up -d`.
-
-Then open `http://<host>:6972` in the TV's browser and sign in. On LG webOS TVs you can also install a small
-launcher app, so lite-tv gets its own icon on the home screen and opens full screen: see [webos/README.md](webos/README.md).
-
-Without Docker (any OS, Node 18 or later, no `npm install` needed):
+Without Docker, all you need is Node.js 18 or later (no `npm install`):
 
 ```sh
-JELLYFIN_URL=http://192.168.1.10:8096 node server.js
+JELLYFIN_URL=http://localhost:8096 node server.js
 ```
+
+Then open `http://<that computer's IP>:6972` in the TV's browser and sign in. On LG webOS TVs you can also install
+a small launcher app, so lite-tv gets its own icon on the home screen and opens full screen: see
+[webos/README.md](webos/README.md).
 
 lite-tv is meant for your home network. Don't expose it to the internet.
 
@@ -67,6 +93,7 @@ that folder as private: it contains Jellyfin access tokens.
 | `PORT` | `6972` | Listen port |
 | `PAGE_SIZE` | `24` | Items per grid page |
 | `DATA_DIR` | `./data` (`/data` in Docker) | Where sign-ins are stored |
+| `PUID`, `PGID` | `1000` (Docker only) | User and group lite-tv runs as, and owner of `/data` (Unraid: 99 and 100) |
 
 ## Remote control
 
@@ -104,6 +131,18 @@ lite-tv only replaces the browsing UI. **Playback decisions are the official Jel
 The client is plain ES5 with flexbox layout (no CSS grid, `gap` or custom properties, and no
 IntersectionObserver or fetch). Flexbox rules carry `-webkit-` prefixed copies for Chrome 27 and older.
 
+## Development
+
+No build step and no dependencies. To work on lite-tv without your own Jellyfin, run the demo server, which has
+an invented library, and sign in with any username and password:
+
+```sh
+node tools/demo-jellyfin.js                              # pretend Jellyfin on :8097
+JELLYFIN_URL=http://localhost:8097 node server.js        # lite-tv on :6972
+```
+
+`public/jf-profile.js` is the one built file: see `profile/build.js` to rebuild it.
+
 ## Project layout
 
 ```
@@ -121,6 +160,9 @@ public/jf-profile.js  jellyfin-web's device-profile builder, compiled to ES5 (bu
 profile/              build tooling for jf-profile.js (not needed to run lite-tv)
 vendor/jellyfin-web/  the jellyfin-web source files jf-profile.js is built from
 webos/                optional LG webOS launcher app
+tools/demo-jellyfin.js  pretend Jellyfin with an invented library (development, screenshots)
+unraid/lite-tv.xml    Unraid container template
+docs/INSTALL.md       installation for Docker, Unraid, Linux, Windows and macOS
 ```
 
 ## Licence

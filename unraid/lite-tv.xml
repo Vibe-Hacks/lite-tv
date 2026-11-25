@@ -1,0 +1,22 @@
+<?xml version="1.0"?>
+<Container version="2">
+  <Name>lite-tv</Name>
+  <Repository>ghcr.io/vibe-hacks/lite-tv:latest</Repository>
+  <Registry>https://github.com/Vibe-Hacks/lite-tv/pkgs/container/lite-tv</Registry>
+  <Network>bridge</Network>
+  <Privileged>false</Privileged>
+  <Support>https://github.com/Vibe-Hacks/lite-tv/issues</Support>
+  <Project>https://github.com/Vibe-Hacks/lite-tv</Project>
+  <Overview>A fast Jellyfin interface for old LG TVs (2015 onwards, built for webOS 3.x). The pages are built on the server, so the TV's browser has very little to do. Playback uses the official Jellyfin web client's device profile and bitrate test. Open http://[your server]:6972 in the TV's browser and sign in with Quick Connect.</Overview>
+  <Category>MediaServer:Video Tools:</Category>
+  <WebUI>http://[IP]:[PORT:6972]/</WebUI>
+  <TemplateURL>https://raw.githubusercontent.com/Vibe-Hacks/lite-tv/main/unraid/lite-tv.xml</TemplateURL>
+  <Icon>https://raw.githubusercontent.com/Vibe-Hacks/lite-tv/main/webos/app/largeIcon.png</Icon>
+  <ExtraParams>--init</ExtraParams>
+  <Config Name="WebUI port" Target="6972" Default="6972" Mode="tcp" Description="The port the TV opens." Type="Port" Display="always" Required="true" Mask="false">6972</Config>
+  <Config Name="Jellyfin URL" Target="JELLYFIN_URL" Default="" Mode="" Description="Your Jellyfin server as this container reaches it, for example http://192.168.1.10:8096. Use the server's IP address, not localhost." Type="Variable" Display="always" Required="true" Mask="false"></Config>
+  <Config Name="Full Jellyfin link" Target="JELLYFIN_UI_URL" Default="" Mode="" Description="Optional: adds a 'Full Jellyfin' link to the header." Type="Variable" Display="advanced" Required="false" Mask="false"></Config>
+  <Config Name="Sign-ins" Target="/data" Default="/mnt/user/appdata/lite-tv" Mode="rw" Description="Where sign-ins are stored. Contains Jellyfin access tokens." Type="Path" Display="advanced" Required="true" Mask="false">/mnt/user/appdata/lite-tv</Config>
+  <Config Name="PUID" Target="PUID" Default="99" Mode="" Description="User ID lite-tv runs as (99 = nobody)." Type="Variable" Display="advanced" Required="false" Mask="false">99</Config>
+  <Config Name="PGID" Target="PGID" Default="100" Mode="" Description="Group ID lite-tv runs as (100 = users)." Type="Variable" Display="advanced" Required="false" Mask="false">100</Config>
+</Container>
