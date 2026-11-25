@@ -47,8 +47,6 @@ TV generation (Chrome 27, 34, 38, 53, 68 and 79) were run against a real Jellyfi
 - remote-control (arrow key) navigation between tiles
 - no script errors in any engine
 
-These runs found real problems in the 2014-era engine (stacked tiles, stretched posters, rows wider than the
-screen), which were fixed and checked again in all six engines.
 
 **Not covered by the engine tests:** video playback (desktop Chromium lacks the TV's video decoders, so playback
 has only been confirmed on the C7), and speed (a PC is far faster than a TV's processor).
