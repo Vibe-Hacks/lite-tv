@@ -13,6 +13,21 @@ Pick your system:
 
 Then [open it on the TV](#open-it-on-the-tv).
 
+## How well tested each install is
+
+lite-tv itself is used daily on an LG C7 TV, served from an Unraid server. The install methods below are newer, and
+not all of them have been tried end to end yet. The untested ones use the same lite-tv code and only standard parts
+of each system, so they should work. If you try one, please [open an issue](https://github.com/Vibe-Hacks/lite-tv/issues)
+and say whether it did.
+
+| Install | Status | What's been checked |
+|---|---|---|
+| [Docker](#docker) | Partly tested | The image builds and is published for amd64 and arm64. A container hasn't been run from it yet. The `PUID`/`PGID` handling was tested on Linux outside Docker |
+| [Unraid](#unraid) | Not tested yet | The template file is valid, and it uses the same image as Docker. (The author's own Unraid setup runs lite-tv a different way, with Node mounted from a folder.) |
+| [Linux](#linux-without-docker) | Tested | Run on Ubuntu 24.04 (under WSL): sign-ins stored, `PUID`/`PGID` checked. The systemd unit passes `systemd-analyze verify`, but hasn't been run as a service |
+| [Windows](#windows) | Partly tested | On Windows 10, `start.cmd` was run the way Task Scheduler starts it, and served pages. The firewall and scheduled-task commands were checked but not registered |
+| [macOS](#macos) | Not tested | lite-tv only needs Node.js, as on Linux. The launch agent file is valid |
+
 ## Before you start: your Jellyfin address
 
 lite-tv needs one setting, `JELLYFIN_URL`: the address of your Jellyfin server **as lite-tv sees it**.
@@ -35,6 +50,8 @@ with a 6-digit code instead of typing your password with the remote.
 ---
 
 ## Docker
+
+> **Status: partly tested.** The image builds and is published. A container hasn't been run from it yet.
 
 The image is `ghcr.io/vibe-hacks/lite-tv:latest` (amd64 and arm64).
 
@@ -77,6 +94,8 @@ Linux, `id -u` and `id -g` show yours. Synology users usually want the IDs of th
 
 ## Unraid
 
+> **Status: not tested yet.** It should work: it uses the same image as Docker. Please report how it goes.
+
 ### With the template (recommended)
 
 1. Open **Terminal** (top right in the Unraid web UI) and paste:
@@ -113,6 +132,8 @@ Docker → Add Container, then set:
 ---
 
 ## Linux without Docker
+
+> **Status: tested** on Ubuntu 24.04. The systemd unit is validated but hasn't been run as a service yet.
 
 You need **Node.js 18 or newer** (`node -v` to check). Use your distribution's package if it's new enough, or
 [nodejs.org](https://nodejs.org/en/download). lite-tv has no other dependencies and needs no `npm install`.
@@ -158,6 +179,8 @@ If you use a firewall, allow the port: `sudo ufw allow 6972/tcp` (or your firewa
 ---
 
 ## Windows
+
+> **Status: partly tested** on Windows 10. The start script works; the scheduled task hasn't been registered and run end to end yet.
 
 1. **Install Node.js** (the LTS version) from [nodejs.org](https://nodejs.org/en/download), or in PowerShell:
    `winget install OpenJS.NodeJS.LTS`.
@@ -210,6 +233,8 @@ Prefer Docker Desktop? Use the [Docker](#docker) steps with `JELLYFIN_URL=http:/
 ---
 
 ## macOS
+
+> **Status: not tested.** It should work: it's the same as Linux apart from the launch agent. Please report how it goes.
 
 1. **Install Node.js** (LTS) from [nodejs.org](https://nodejs.org/en/download), or with Homebrew: `brew install node`.
 2. **Get lite-tv** into your home folder:

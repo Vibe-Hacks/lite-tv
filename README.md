@@ -13,6 +13,11 @@ be installed on the TV: you open a URL in its browser (or install the optional l
 **Status:** early, but usable every day. Home (Continue watching, Next up, latest movies and shows), Movies,
 TV shows, playback with progress reporting, and "Up next" all work. See [docs/ROADMAP.md](docs/ROADMAP.md).
 
+> **Note:** lite-tv is a personal project, built entirely with AI. The official Jellyfin app was frustratingly slow
+> on my 2017 LG TV (webOS 3.5), and the lightweight alternatives I found either didn't support my webOS version or
+> were built for newer TVs and still ran poorly on mine. So I made something that does as little as possible on the
+> TV itself. See [How it's been tested](#how-its-been-tested).
+
 ## Which TVs
 
 lite-tv is built for and tested on an **LG OLED55C7 (2017, webOS 3.5, Chrome 38)**. The pages have also been
@@ -26,9 +31,30 @@ checked in the browser engine of each older and newer webOS generation:
 | 2018–2019 | 4.x | Chrome 53 | Work |
 | 2020–2021 | 5.x, 6.x | Chrome 68, 79 | Work |
 
-The engine checks cover the pages and remote-control navigation. Video playback depends on the TV's own
-media player, so it has only been confirmed on the C7. The older the TV, the more lite-tv helps. On a 2022 or
-newer TV the official Jellyfin app is usually fine.
+The older the TV, the more lite-tv helps. On a 2022 or newer TV the official Jellyfin app is usually fine.
+
+## How it's been tested
+
+**On a real TV.** lite-tv is used day to day on an LG OLED55C7 (2017, webOS 3.5), the TV it was built for:
+browsing, signing in, and playing movies and episodes, with watched state and resume points kept in step with
+Jellyfin.
+
+**In the browser engine of every webOS generation from 2014 to 2021.** Archived Chromium builds matching each LG
+TV generation (Chrome 27, 34, 38, 53, 68 and 79) were run against a real Jellyfin server, at the TV's 1920×1080:
+
+- the sign-in "Getting ready" page, which runs jellyfin-web's device-profile builder and bitrate test
+- Home, Movies, Shows, a series, a season and a movie page, with the layout measured in each engine
+- remote-control (arrow key) navigation between tiles
+- no script errors in any engine
+
+These runs found real problems in the 2014-era engine (stacked tiles, stretched posters, rows wider than the
+screen), which were fixed and checked again in all six engines.
+
+**Not covered by the engine tests:** video playback (desktop Chromium lacks the TV's video decoders, so playback
+has only been confirmed on the C7), and speed (a PC is far faster than a TV's processor).
+
+**Install methods:** see the [tested and untested list](docs/INSTALL.md#how-well-tested-each-install-is) in the
+install guide.
 
 ## Screenshots
 
