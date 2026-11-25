@@ -26,12 +26,20 @@ Last updated: 2026-11-25
 - Added `docs/INSTALL.md`, `unraid/lite-tv.xml`, the image workflow, `tools/demo-jellyfin.js` (invented library
   for development and the screenshots), the README screenshots, the testing notes and the project note.
 - webOS launcher app ID is now `io.github.vibe-hacks.litetv`.
+- Player: the arrow press that hides the Magic Remote pointer no longer seeks (uses webOS `cursorStateChange`,
+  with mouse movement as the fallback). Checked in a simulated run, not yet on the TV.
+- Roadmap: new design rule (standard Jellyfin features only, never plugin-specific code) and a build plan:
+  search, track switching during playback, skip intro and credits, libraries and collections, favourites.
 
 ## Open
 
+- **Not pushed yet:** the Magic Remote fix (`public/app.js`) and the roadmap plan (`docs/ROADMAP.md`) are only
+  on the dev machine. Commit and push them first.
 - **Run the published image as a container** (Docker and Unraid template) end to end. Then mark Docker and
   Unraid as tested in `docs/INSTALL.md`.
 - **Windows:** register and run the scheduled task end to end. **macOS:** untested, needs a Mac.
 - **2014 TVs (webOS 1.x):** never tried on a real TV. The launcher app there runs in WebKit, which is untested.
-- **Roadmap:** switch audio and subtitles during playback, a libraries switcher, collections, and listing in
-  Unraid Community Applications (see `docs/ROADMAP.md`).
+- **Confirm the Magic Remote fix on the C7:** with the pointer showing, press an arrow during playback. It should
+  only hide the pointer. Needs the new image (Tower still runs older code).
+- **Roadmap:** next is step 1, Search, from the build plan in `docs/ROADMAP.md`. Also listing in Unraid
+  Community Applications.
