@@ -1,0 +1,97 @@
+/* lite-tv: flexbox only, no grid/gap/custom properties. Sized for a 1920px-wide TV browser.
+   Works back to Chrome 27 (2014 LG TVs): flexbox properties carry a -webkit- prefixed copy first, and
+   html.nofit (set by app.js when object-fit is unsupported) crops thumbnails without object-fit. */
+html, body { margin: 0; padding: 0; background: #101418; color: #e8edf2; font-family: "LG Display", Roboto, Arial, sans-serif; }
+body { font-size: 22px; }
+a { color: inherit; text-decoration: none; }
+main { padding: 8px 32px 48px; }
+h1 { font-size: 40px; margin: 16px 8px 8px; font-weight: 600; }
+h2 { font-size: 28px; margin: 28px 8px 8px; font-weight: 600; color: #b9c4cf; }
+
+header { display: -webkit-flex; display: flex; -webkit-align-items: center; align-items: center; padding: 16px 32px; background: #182028; }
+header .sp { -webkit-flex: 1; flex: 1; }
+.nav { padding: 12px 28px; margin-right: 8px; border-radius: 8px; font-size: 26px; color: #c9d3dc; border: 3px solid transparent; }
+.nav.on { background: #2a3a4a; color: #fff; }
+.nav.dim { font-size: 20px; color: #7f8c99; }
+
+.bar { display: -webkit-flex; display: flex; -webkit-align-items: center; align-items: center; -webkit-flex-wrap: wrap; flex-wrap: wrap; margin: 16px 0 8px; }
+.btn { display: inline-block; padding: 10px 22px; margin: 0 8px 8px; border-radius: 8px; background: #1f2a35; color: #c9d3dc; border: 3px solid transparent; }
+.btn.on { background: #2f6fb0; color: #fff; }
+.pager { -webkit-justify-content: center; justify-content: center; margin-top: 24px; }
+.pager .info { margin: 0 24px 8px; color: #8d99a6; }
+
+.grid { display: -webkit-flex; display: flex; -webkit-flex-wrap: wrap; flex-wrap: wrap; }
+.tile { display: block; box-sizing: border-box; width: calc(20% - 16px); min-width: 0; /* Chrome 27: don't let long titles widen the tile */ margin: 8px; border-radius: 10px; background: #18212a; border: 4px solid transparent; overflow: hidden; }
+.thumb { display: block; position: relative; padding-top: 56.25%; background: #0b0e11; }
+.thumb img { position: absolute; left: 0; top: 0; width: 100%; height: 100%; object-fit: cover; opacity: 0; transition: opacity .2s; }
+.thumb img.ok { opacity: 1; }
+/* No object-fit (before Chrome 31): fill the width, centre vertically, crop the overflow. */
+.nofit .thumb { overflow: hidden; }
+.nofit .thumb img { height: auto; top: 50%; -webkit-transform: translateY(-50%); transform: translateY(-50%); }
+.badge { position: absolute; right: 8px; bottom: 10px; padding: 2px 8px; border-radius: 4px; background: rgba(0,0,0,.75); font-size: 18px; font-weight: 600; }
+.prog { position: absolute; left: 0; right: 0; bottom: 0; height: 6px; background: rgba(255,255,255,.2); }
+.prog span { display: block; height: 100%; background: #3d8fe0; }
+.tile .t { display: block; padding: 10px 12px 2px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; font-size: 22px; }
+.tile .m { display: block; padding: 0 12px 12px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; font-size: 18px; color: #8d99a6; }
+.tile.more { display: -webkit-flex; display: flex; -webkit-align-items: center; align-items: center; -webkit-justify-content: center; justify-content: center; min-height: 200px; font-size: 28px; color: #8d99a6; }
+
+/* Focus (remote) and hover (Magic Remote pointer) look the same. */
+a:focus, a:hover { outline: none; }
+.tile:focus, .tile:hover { border-color: #4fa3ff; background: #22303d; }
+.btn:focus, .btn:hover, .nav:focus, .nav:hover { border-color: #4fa3ff; }
+
+/* Player */
+body.play { background: #000; overflow: hidden; }
+body.play main { padding: 0; }
+#player { position: fixed; left: 0; top: 0; right: 0; bottom: 0; background: #000; }
+#v { width: 100%; height: 100%; background: #000; }
+#osd { position: absolute; left: 0; right: 0; bottom: 0; padding: 40px 56px 36px; background: linear-gradient(to top, rgba(0,0,0,.85), rgba(0,0,0,0)); transition: opacity .3s; }
+#osd.hide { opacity: 0; }
+#osd .t { font-size: 34px; font-weight: 600; }
+#osd .m { font-size: 22px; color: #b9c4cf; margin: 6px 0 18px; }
+#osd .bar { margin: 0; -webkit-flex-wrap: nowrap; flex-wrap: nowrap; font-size: 24px; }
+#osd .track { -webkit-flex: 1; flex: 1; height: 8px; margin: 0 20px; background: rgba(255,255,255,.25); border-radius: 4px; }
+#fill { display: block; height: 100%; width: 0; background: #4fa3ff; border-radius: 4px; }
+#osd .keys { margin-top: 14px; font-size: 18px; color: #7f8c99; }
+#msg { position: absolute; left: 50%; top: 45%; width: 800px; margin-left: -400px; text-align: center; font-size: 36px; font-weight: 600; text-shadow: 0 2px 8px #000; }
+
+/* Section switcher (shown when more than one backend is enabled) and watched mark. */
+.nav.sec { font-weight: 600; }
+header .div { width: 2px; height: 40px; margin: 0 16px 0 8px; background: #33414f; }
+.seen { position: absolute; left: 8px; top: 8px; width: 34px; height: 34px; line-height: 34px; text-align: center; border-radius: 17px; background: #2f6fb0; font-size: 20px; font-weight: 700; }
+
+/* Posters (movies): 7 per row */
+.tile.poster { width: calc(14.285% - 16px); }
+.poster .thumb { padding-top: 150%; }
+
+/* Detail page */
+.detail { margin: 0 -32px; min-height: 780px; background-size: cover; background-position: center top; }
+.detail .shade { display: -webkit-flex; display: flex; -webkit-align-items: flex-start; align-items: flex-start; min-height: 780px; padding: 48px 56px; background: linear-gradient(to right, rgba(16,20,24,.97) 35%, rgba(16,20,24,.6)); }
+.poster-img { width: 300px; margin-right: 48px; border-radius: 10px; box-shadow: 0 8px 30px rgba(0,0,0,.6); }
+.detail .info { max-width: 1100px; }
+.detail h1 { margin: 0 0 12px; font-size: 52px; }
+.kicker { font-size: 26px; color: #8fb8e0; margin-bottom: 4px; }
+.facts span { display: inline-block; margin: 0 22px 8px 0; font-size: 24px; color: #b9c4cf; }
+.overview { font-size: 24px; line-height: 1.5; color: #d5dde4; max-width: 1000px; }
+.dim { color: #7f8c99; }
+
+/* Login */
+.login { max-width: 900px; margin: 40px auto; text-align: center; }
+.login-code { display: inline-block; margin: 24px 0; padding: 20px 48px; border-radius: 12px; background: #1f2a35; font-size: 96px; font-weight: 700; letter-spacing: 12px; }
+.login .err { color: #ff8a80; font-size: 26px; }
+.login form { display: -webkit-flex; display: flex; -webkit-flex-direction: column; flex-direction: column; -webkit-align-items: center; align-items: center; }
+.login input { width: 520px; margin: 8px 0; padding: 14px 18px; font-size: 26px; border-radius: 8px; border: 3px solid #33414f; background: #0b0e11; color: #e8edf2; }
+.login input:focus { border-color: #4fa3ff; outline: none; }
+.login button { margin-top: 16px; font-size: 26px; cursor: pointer; }
+
+/* Shows / seasons / track picker */
+.crumb { margin: 16px 0 0; }
+.kicker a { color: inherit; }
+.tracks { display: -webkit-flex; display: flex; -webkit-flex-wrap: wrap; flex-wrap: wrap; -webkit-align-items: center; align-items: center; margin: 4px 0 8px; }
+.tracks .tl { width: 140px; margin-left: 8px; font-size: 20px; color: #8d99a6; }
+.btn.small { padding: 6px 16px; font-size: 20px; }
+#msg .small { font-size: 24px; font-weight: 400; color: #b9c4cf; }
+.detail.compact, .detail.compact .shade { min-height: 0; }
+.detail.compact .shade { padding-bottom: 32px; }
+.detail.compact .poster-img { width: 240px; }
+.detail.compact .overview { max-height: 112px; overflow: hidden; }

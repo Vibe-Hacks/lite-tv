@@ -1,0 +1,14 @@
+{
+  "name": "lite-tv",
+  "version": "0.1.0",
+  "description": "Fast, server-rendered Jellyfin UI for old smart-TV browsers.",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js"
+  },
+  "engines": {
+    "node": ">=18"
+  },
+  "license": "GPL-2.0-or-later",
+  "private": true
+}

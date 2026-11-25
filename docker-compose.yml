@@ -1,0 +1,15 @@
+# Example: run lite-tv next to an existing Jellyfin server.
+#   docker compose up -d     then open http://<this-host>:6972 on the TV
+services:
+  lite-tv:
+    build: .                       # or: image: ghcr.io/vibe-hacks/lite-tv:latest (once published)
+    container_name: lite-tv
+    restart: unless-stopped
+    init: true
+    ports:
+      - "6972:6972"
+    environment:
+      - JELLYFIN_URL=http://192.168.1.10:8096   # your Jellyfin server, as reachable from this container
+      # - JELLYFIN_UI_URL=http://192.168.1.10:8096  # optional "Full Jellyfin" link in the header
+    volumes:
+      - ./data:/data               # login sessions

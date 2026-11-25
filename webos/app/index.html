@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>lite-tv</title>
+<style>
+  html, body { margin: 0; height: 100%; background: #101418; color: #e8edf2; font-family: "LG Display", Roboto, Arial, sans-serif; }
+  body { display: flex; align-items: center; justify-content: center; text-align: center; }
+  h1 { font-size: 44px; font-weight: 600; margin: 0 0 16px; }
+  p { font-size: 26px; color: #8d99a6; margin: 8px 0; }
+  .url { color: #4fa3ff; }
+</style>
+</head>
+<body>
+<div>
+  <h1 id="title">Opening lite-tv…</h1>
+  <p id="detail"></p>
+</div>
+<script src="webOSTV.js" charset="utf-8"></script>
+<script>
+// Launcher: check the lite-tv server is reachable, then hand the whole app over to it.
+// LITE_TV_URL is replaced by webos/build.js with the address of your lite-tv server.
+// Like the official Jellyfin webOS app, it reads the TV's Dolby Atmos / Dolby Vision / HDR10 support
+// (webOS.deviceInfo from LG's webOSTV.js) and passes it on for the Jellyfin device profile.
+(function () {
+  var URL_ = 'LITE_TV_URL'.replace(/\/+$/, '');
+  var tries = 0, di = null;
+  function readDeviceInfo(done) {
+    var finished = false;
+    function finish() { if (!finished) { finished = true; done(); } }
+    try {
+      window.webOS.deviceInfo(function (info) {
+        if (info) di = { dolbyAtmos: !!info.dolbyAtmos, dolbyVision: !!info.dolbyVision, hdr10: !!info.hdr10 };
+        finish();
+      });
+    } catch (e) { /* not on a webOS TV */ }
+    setTimeout(finish, 1500);
+  }
+  function startUrl() { return URL_ + '/' + (di ? '?di=' + encodeURIComponent(JSON.stringify(di)) : ''); }
+  function $(id) { return document.getElementById(id); }
+  function probe() {
+    tries++;
+    var img = new Image(), done = false;
+    var timer = setTimeout(function () { if (!done) { done = true; fail(); } }, 4000);
+    img.onload = function () { if (done) return; done = true; clearTimeout(timer); location.replace(startUrl()); };
+    img.onerror = function () { if (done) return; done = true; clearTimeout(timer); fail(); };
+    img.src = URL_ + '/ping.gif?t=' + new Date().getTime();
+  }
+  function fail() {
+    $('title').innerHTML = 'Can’t reach lite-tv';
+    $('detail').innerHTML = 'Trying <span class="url">' + URL_ + '</span> again… (attempt ' + tries + ')<br>Press Back to close.';
+    setTimeout(probe, 5000);
+  }
+  document.addEventListener('keydown', function (e) {
+    if (e.keyCode === 461 && window.PalmSystem && PalmSystem.platformBack) PalmSystem.platformBack();
+  });
+  readDeviceInfo(probe);
+})();
+</script>
+</body>
+</html>

@@ -1,0 +1,10 @@
+.git
+docs
+*.md
+docker-compose*.yml
+# Never send login sessions (they hold access tokens) or build tooling to the Docker build.
+data
+**/node_modules
+profile
+vendor
+webos

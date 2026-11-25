@@ -1,0 +1,14 @@
+{
+  "name": "lite-tv-profile-build",
+  "private": true,
+  "description": "Build tooling for public/jf-profile.js (not needed to run lite-tv).",
+  "scripts": {
+    "build": "node build.js"
+  },
+  "devDependencies": {
+    "@babel/core": "7.25.2",
+    "@babel/preset-env": "7.25.4",
+    "core-js": "3.38.1",
+    "esbuild": "0.23.1"
+  }
+}

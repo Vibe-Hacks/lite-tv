@@ -1,0 +1,14 @@
+{
+  "id": "io.github.vibe-hacks.litetv",
+  "version": "0.2.0",
+  "vendor": "lite-tv",
+  "type": "web",
+  "main": "index.html",
+  "title": "lite-tv",
+  "icon": "icon.png",
+  "largeIcon": "largeIcon.png",
+  "bgColor": "#101418",
+  "iconColor": "#101418",
+  "resolution": "1920x1080",
+  "disableBackHistoryAPI": true
+}
