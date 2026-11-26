@@ -156,8 +156,27 @@
     });
     v.addEventListener('click', toggle);
 
+    // Magic Remote: on webOS, the arrow press that hides the pointer also reaches the page. That press should
+    // only hide the pointer (and show the controls), not seek. webOS reports the pointer with cursorStateChange;
+    // where it doesn't, any mouse movement counts as "pointer showing" until the next arrow press.
+    var pointerOn = false, pointerKnown = false, pointerOffAt = 0;
+    document.addEventListener('cursorStateChange', function (e) {
+      var on = !!(e.detail && e.detail.visibility);
+      pointerKnown = true;
+      if (pointerOn && !on) pointerOffAt = new Date().getTime(); // may arrive just before that arrow keydown
+      pointerOn = on;
+    });
+    document.addEventListener('mousemove', function () { if (!pointerKnown) pointerOn = true; });
+    function pointerHidingPress(k) {
+      if (k !== KEY.LEFT && k !== KEY.RIGHT && k !== KEY.UP && k !== KEY.DOWN) return false;
+      var hiding = pointerOn || new Date().getTime() - pointerOffAt < 500;
+      pointerOn = false; pointerOffAt = 0;
+      return hiding;
+    }
+
     document.addEventListener('keydown', function (e) {
       var k = e.keyCode, step = 0;
+      if (pointerHidingPress(k)) { show(); e.preventDefault(); return; }
       if (countdownT) { // Up-next countdown is showing
         if (k === KEY.ENTER || k === KEY.PLAY || k === KEY.PLAYPAUSE) { clearInterval(countdownT); location.replace(nextUrl); }
         else if (k === KEY.BACK || k === KEY.STOP || k === KEY.BACKSPACE || k === KEY.ESC) { clearInterval(countdownT); countdownT = null; exitPlayer(); }
