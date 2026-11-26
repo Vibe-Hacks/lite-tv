@@ -1,6 +1,6 @@
 # Status
 
-Last updated: 2026-11-25
+Last updated: 2026-11-26
 
 ## Current
 
@@ -31,15 +31,23 @@ Last updated: 2026-11-25
 - Roadmap: new design rule (standard Jellyfin features only, never plugin-specific code) and a build plan:
   search, track switching during playback, skip intro and credits, libraries and collections, favourites.
 
+## Changed on 2026-11-26
+
+- Pushed the Magic Remote fix and the roadmap plan (`f366dd4`). The image with them built successfully.
+
 ## Open
 
-- **Not pushed yet:** the Magic Remote fix (`public/app.js`) and the roadmap plan (`docs/ROADMAP.md`) are only
-  on the dev machine. Commit and push them first.
-- **Run the published image as a container** (Docker and Unraid template) end to end. Then mark Docker and
-  Unraid as tested in `docs/INSTALL.md`.
+- **Test the Unraid template on Tower (in progress):** add it in the Unraid web UI (Docker, Add Container,
+  template URL `https://raw.githubusercontent.com/Vibe-Hacks/lite-tv/main/unraid/lite-tv.xml`) as a separate
+  test container: name `lite-tv-test`, port `6973`, Jellyfin URL `http://192.168.1.211:8096`, sign-ins in
+  `/mnt/user/appdata/lite-tv-test` (not the default, which is the old container's folder). Keep the old
+  container on 6972 until it's proven. If it works, switch the TV over, retire the old setup, and mark Docker
+  and Unraid as tested in `docs/INSTALL.md`.
+- **Rebuild the webOS launcher** for the new app ID (`node webos/build.js http://192.168.1.211:<port>`),
+  install it on the C7, and uninstall the old `io.github.litetv.launcher`.
 - **Windows:** register and run the scheduled task end to end. **macOS:** untested, needs a Mac.
 - **2014 TVs (webOS 1.x):** never tried on a real TV. The launcher app there runs in WebKit, which is untested.
 - **Confirm the Magic Remote fix on the C7:** with the pointer showing, press an arrow during playback. It should
-  only hide the pointer. Needs the new image (Tower still runs older code).
+  only hide the pointer. Test it on the new test container.
 - **Roadmap:** next is step 1, Search, from the build plan in `docs/ROADMAP.md`. Also listing in Unraid
   Community Applications.
